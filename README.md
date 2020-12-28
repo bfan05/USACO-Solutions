@@ -1,1 +1,1 @@
-# USACOSolutions
+# USACO Solutions
