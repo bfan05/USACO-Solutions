@@ -28,9 +28,8 @@ ll cx1 = 0, cx2 = 0, cy1 = 0, cy2 = 0;
 bool visited[20][20];
 
 void dfs(ll i, ll j) {
-    if (i < cx1 || i > cx2 || j < cy1 || j > cy2 || visited[i][j]) {
+    if (i < cx1 || i > cx2 || j < cy1 || j > cy2 || visited[i][j])
         return;
-    }
     visited[i][j] = true;
     vector<ll> dir = { 0, 1, 0, -1, 0 };
     rep(k, 0, 4) {
@@ -42,11 +41,11 @@ void dfs(ll i, ll j) {
 
 bool check(ll x1, ll y1, ll x2, ll y2) {
     cx1 = x1; cx2 = x2; cy1 = y1; cy2 = y2;
-    rep(i, 0, 20) {
-        rep(j, 0, 20)
+    rep(i, x1, x2 + 1) {
+        rep(j, y1, y2 + 1)
             visited[i][j] = false;
     }
-    unordered_map<char, ll> mp;
+    map<char, ll> mp;
     rep(i, x1, x2 + 1) {
         rep(j, y1, y2 + 1) {
             if (!visited[i][j]) {
@@ -58,8 +57,8 @@ bool check(ll x1, ll y1, ll x2, ll y2) {
         }
     }
     if (mp.size() != 2) return false;
-    if ((mp.begin()->second == 1 && prev(mp.end(), 1)->second > 1)
-        || (mp.begin()->second > 1 && prev(mp.end(), 1)->second == 1)) {
+    if ((mp.begin()->second == 1 && mp.rbegin()->second > 1)
+        || (mp.begin()->second > 1 && mp.rbegin()->second == 1)) {
         return true;
     }
     return false;
@@ -81,11 +80,11 @@ int main()
                     if (check(i, j, k, l)) {
                         vector<pair<pair<ll, ll>, pair<ll, ll>>> nsols;
                         bool canpush = true;
-                        rep(i, 0, sols.size()) {
-                            ll sx1 = sols[i].first.first;
-                            ll sy1 = sols[i].first.second;
-                            ll sx2 = sols[i].second.first;
-                            ll sy2 = sols[i].second.second;
+                        rep(m, 0, sols.size()) {
+                            ll sx1 = sols[m].first.first;
+                            ll sy1 = sols[m].first.second;
+                            ll sx2 = sols[m].second.first;
+                            ll sy2 = sols[m].second.second;
                             if (sx1 >= i && sy1 >= j && sx2 <= k && sy2 <= l) goto next;
                             if (sx1 <= i && sy1 <= j && sx2 >= k && sy2 >= l) {
                                 canpush = false;
