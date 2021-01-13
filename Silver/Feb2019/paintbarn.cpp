@@ -25,7 +25,7 @@ void setIO(string name = "paintbarn") {
     }
 }
 
-const int sz = 15;
+const int sz = 1001;
 ll n, k;
 ll ps[sz][sz];
 ll paint[sz][sz];
