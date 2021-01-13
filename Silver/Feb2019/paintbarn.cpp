@@ -1,3 +1,6 @@
+// 2d prefix sum - keep track of the difference in paint between (i, j) and (i - 1, j - 1)
+// calculate the paint for each (i, j) and loop to check how many spots have exactly k coats
+
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -14,7 +17,7 @@ using pi = pair<int, int>;
 #define f first
 #define s second
 
-void setIO(string name = "test") {
+void setIO(string name = "paintbarn") {
     ios_base::sync_with_stdio(0); cin.tie(0);
     if (name.size()) {
         freopen((name + ".in").c_str(), "r", stdin);
