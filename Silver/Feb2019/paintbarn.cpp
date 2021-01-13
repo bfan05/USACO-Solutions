@@ -6,14 +6,15 @@ using ll = long long;
 
 using vi = vector<int>;
 #define pb push_back
-#define all(x) begin(x), end(x)
+#define all(x) x.begin(), x.end()
 #define rep(i, a, b) for(ll i = a; i < b; ++i)
+#define rsz(x, n) x.resize(n)
 
 using pi = pair<int, int>;
 #define f first
 #define s second
 
-void setIO(string name = "paintbarn") {
+void setIO(string name = "test") {
     ios_base::sync_with_stdio(0); cin.tie(0);
     if (name.size()) {
         freopen((name + ".in").c_str(), "r", stdin);
@@ -21,54 +22,40 @@ void setIO(string name = "paintbarn") {
     }
 }
 
-int main() {
+const int sz = 15;
+ll n, k;
+ll ps[sz][sz];
+ll paint[sz][sz];
+
+int main()
+{
     setIO();
-    ll n, k; cin >> n >> k;
-    ll d = 1000;
-    int ps[1001][1001];
-    for (ll i = 0; i <= d; ++i) {
-        for (ll j = 0; j <= d; ++j) {
-            ps[i][j] = 0;
-        }
-    }
-    for (ll i = 0; i < n; ++i) {
-        ll x1, y1, x2, y2; cin >> x1 >> y1 >> x2 >> y2;
+    cin >> n >> k;
+    rep(i, 0, n) {
+        ll x1, y1, x2, y2;
+        cin >> x1 >> y1 >> x2 >> y2;
         ++x1; ++y1;
-        for (ll j = x1; j <= x2; ++j) {
+        ps[x1][y1]++;
+        ps[x1 + 1][y2 + 1]--;
+        ps[x2 + 1][y1 + 1]--;
+        rep(j, x1 + 1, x2 + 1) {
             ps[j][y1]++;
+            ps[j + 1][y2 + 1]--;
         }
-        for (ll j = y1; j <= y2; ++j) {
+        rep(j, y1 + 1, y2 + 1) {
             ps[x1][j]++;
+            ps[x2 + 1][j + 1]--;
         }
-        ps[x1][y1]--;
-        for (ll j = y1 + 1; j <= y2 + 1; ++j) {
-            if (x2 + 1 <= d && j <= d) {
-                ps[x2 + 1][j]--;
-            }
-        }
-        for (ll j = x1 + 1; j <= x2 + 1; ++j) {
-            if (y2 + 1 <= d && j <= d) {
-                ps[j][y2 + 1]--;
-            }
-        }
-        if (x2 + 1 <= d && y2 + 1 <= d) {
-            ps[x2 + 1][y2 + 1]++;
-        }
+        ps[x2 + 1][y2 + 1]++;
     }
-    int matrix[1001][1001];
-    for (ll i = 0; i <= d; ++i) {
-        for (ll j = 0; j <= d; ++j) {
-            matrix[i][j] = 0;
-        }
+    rep(i, 1, sz) {
+        rep(j, 1, sz)
+            paint[i][j] = paint[i - 1][j - 1] + ps[i][j];
     }
     ll ans = 0;
-    for (ll i = 1; i <= d; ++i) {
-        for (ll j = 1; j <= d; ++j) {
-            matrix[i][j] = matrix[i - 1][j - 1] + ps[i][j];
-            if (matrix[i][j] == k) {
-                ++ans;
-            }
-        }
+    rep(i, 0, sz) {
+        rep(j, 0, sz)
+            if (paint[i][j] == k) ++ans;
     }
     cout << ans << endl;
 }
