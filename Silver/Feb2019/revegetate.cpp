@@ -1,8 +1,15 @@
+// store the edges in 2d vector of pairs. pair first is other vertex, pair second indicates S/D.
+// for each connected component that satisfies bipartite conditions, ans *= 2. just dfs for each
+// unvisited vertex. if we ever find bipartite doesn't hold, then the ans is 0.
+
 #include <bits/stdc++.h>
+#include <unordered_set>
+#include <unordered_map>
 
 using namespace std;
 
 using ll = long long;
+const ll MOD = 1e9 + 7;
 
 using vi = vector<int>;
 #define pb push_back
@@ -22,65 +29,65 @@ void setIO(string name = "revegetate") {
     }
 }
 
-ll n, m;
-vector<vector<ll>> edges;
-vector<ll> colors;
-vector<vector<ll>> same;
-vector<ll> codes;
-ll ans = 0;
-ll cnt = 0;
+vector<vector<pair<ll, ll>>> edges;
 vector<bool> visited;
+vector<ll> colors;
+ll n, m;
 bool works = true;
 
-void dfs(ll node, ll col) {
-    codes[node] = cnt;
-    visited[node] = true;
-    colors[node] = col;
-    for (ll edge : edges[node]) {
-        if (visited[edge])
-            if (colors[edge] == colors[node]) works = false;
-        else
-            dfs(edge, !col);
-    }
-    for (ll edge : same[node]) {
-        if (visited[edge])
-            if (colors[edge] != colors[node]) works = false;
-        else
-            dfs(edge, col);
+void dfs(ll a, ll col) {
+    visited[a] = true;
+    colors[a] = col;
+    for (pair<ll, ll> &edge : edges[a]) {
+        if (!visited[edge.first]) {
+            if (edge.second == 1) {
+                dfs(edge.first, col);
+            }
+            else {
+                dfs(edge.first, !col);
+            }
+        }
+        else if (edge.second == 0 && colors[a] == colors[edge.first]) {
+            works = false;
+            return;
+        }
+        else if (edge.second == 1 && colors[a] != colors[edge.first]) {
+            works = false;
+            return;
+        }
     }
 }
 
-int main() {
+int main()
+{
     setIO();
     cin >> n >> m;
-    colors.resize(n, -1);
     rsz(edges, n);
-    rsz(codes, n);
-    rsz(same, n);
+    rsz(visited, n);
+    rsz(colors, n);
     rep(i, 0, m) {
         char ch; cin >> ch;
         ll a, b; cin >> a >> b;
         --a; --b;
         if (ch == 'S') {
-            same[a].push_back(b);
-            same[b].push_back(a);
+            edges[a].push_back({ b, 1 });
+            edges[b].push_back({ a, 1 });
         }
         else {
-            edges[a].push_back(b);
-            edges[b].push_back(a);
+            edges[a].push_back({ b, 0 });
+            edges[b].push_back({ a, 0 });
         }
     }
-    visited.resize(n, false);
+    string ans = "1";
     rep(i, 0, n) {
         if (!visited[i]) {
-            ++ans;
             dfs(i, 0);
+            ans += "0";
+        }
+        if (!works) {
+            cout << 0 << endl;
+            return 0;
         }
     }
-    if (!works)
-        cout << 0; return 0;
-    string str = "1";
-    rep(i, 0, ans)
-        str += '0';
-    cout << str;
+    cout << ans << endl;
 }
