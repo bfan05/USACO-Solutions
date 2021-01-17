@@ -3,13 +3,10 @@
 // unvisited vertex. if we ever find bipartite doesn't hold, then the ans is 0.
 
 #include <bits/stdc++.h>
-#include <unordered_set>
-#include <unordered_map>
 
 using namespace std;
 
 using ll = long long;
-const ll MOD = 1e9 + 7;
 
 using vi = vector<int>;
 #define pb push_back
